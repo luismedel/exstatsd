@@ -13,9 +13,7 @@ class StreamPipeline(PipelineBase):
 
 
 class StreamClientBase(StatsClientBase):
-    def __init__(
-        self, sock: Optional[socket.socket], prefix: Optional[str] = None
-    ) -> None:
+    def __init__(self, sock: Optional[socket.socket], prefix: Optional[str] = None) -> None:
         self._sock: Optional[socket.socket] = sock
         super().__init__(prefix=prefix)
 
@@ -65,9 +63,7 @@ class TCPStatsClient(StreamClientBase):
 
     def connect(self) -> None:
         fam = socket.AF_INET6 if self._ipv6 else socket.AF_INET
-        family, _, _, _, addr = socket.getaddrinfo(
-            self._host, self._port, fam, socket.SOCK_STREAM
-        )[0]
+        family, _, _, _, addr = socket.getaddrinfo(self._host, self._port, fam, socket.SOCK_STREAM)[0]
         self._sock = socket.socket(family, socket.SOCK_STREAM)
         self._sock.settimeout(self._timeout)
         self._sock.connect(addr)

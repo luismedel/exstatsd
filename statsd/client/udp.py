@@ -37,9 +37,7 @@ class StatsClient(StatsClientBase):
     ) -> None:
         """Create a new client."""
         fam = socket.AF_INET6 if ipv6 else socket.AF_INET
-        family, _, _, _, addr = socket.getaddrinfo(host, port, fam, socket.SOCK_DGRAM)[
-            0
-        ]
+        family, _, _, _, addr = socket.getaddrinfo(host, port, fam, socket.SOCK_DGRAM)[0]
         self._addr = addr
         self._sock: Optional[socket.socket] = socket.socket(family, socket.SOCK_DGRAM)
         self._maxudpsize = maxudpsize

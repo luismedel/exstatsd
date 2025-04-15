@@ -25,9 +25,7 @@ class StatsClientBase:
     def timer(self, stat: str, rate: float = 1.0) -> "Timer":
         return Timer(self, stat, rate)
 
-    def timing(
-        self, stat: str, delta: Union[float, timedelta], rate: float = 1.0
-    ) -> None:
+    def timing(self, stat: str, delta: Union[float, timedelta], rate: float = 1.0) -> None:
         """
         Send new timing information.
 
@@ -46,9 +44,7 @@ class StatsClientBase:
         """Decrement a stat by `count`."""
         self.incr(stat, -count, rate)
 
-    def gauge(
-        self, stat: str, value: float, rate: float = 1.0, delta: bool = False
-    ) -> None:
+    def gauge(self, stat: str, value: float, rate: float = 1.0, delta: bool = False) -> None:
         """Set a gauge value."""
         if value < 0 and not delta:
             if rate < 1:
