@@ -130,7 +130,7 @@ class assert_raises:
     """
 
     def __init__(self, *exc_cls: type):
-        self.exception_classes: Tuple[type] = exc_cls
+        self.exception_classes: Tuple[type, ...] = exc_cls
         self.exception_type: Optional[type] = None
         self.exception: Optional[BaseException] = None
         self.traceback: Optional[Any] = None
