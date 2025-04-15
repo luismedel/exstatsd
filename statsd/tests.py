@@ -4,13 +4,10 @@ import random
 import re
 import socket
 from datetime import timedelta
-from typing import Any, Optional
-from unittest import SkipTest, mock
+from typing import Any, Optional, Tuple
+from unittest import mock
 
-from statsd import StatsClient
-from statsd import TCPStatsClient
-from statsd import UnixSocketStatsClient
-
+from statsd import StatsClient, TCPStatsClient, UnixSocketStatsClient
 
 ADDR = (socket.gethostbyname("localhost"), 8125)
 UNIX_SOCKET = "tmp.socket"
@@ -88,16 +85,23 @@ def _sock_check(sock, count, proto, val=None, addr=None):
 class assert_raises:
     """A context manager that asserts a given exception was raised.
 
+
     >>> with assert_raises(TypeError):
     ...     raise TypeError
 
     >>> with assert_raises(TypeError):
     ...     raise ValueError
+    Traceback (most recent call last):
+        ...
     AssertionError: ValueError not in ['TypeError']
+
 
     >>> with assert_raises(TypeError):
     ...     pass
+    Traceback (most recent call last):
+        ...
     AssertionError: No exception raised.
+
 
     Or you can specify any of a number of exceptions:
 
@@ -106,7 +110,10 @@ class assert_raises:
 
     >>> with assert_raises(TypeError, ValueError):
     ...     raise KeyError
+    Traceback (most recent call last):
+        ...
     AssertionError: KeyError not in ['TypeError', 'ValueError']
+
 
     You can also get the exception back later:
 
@@ -114,17 +121,19 @@ class assert_raises:
     ...     raise TypeError('bad type!')
     >>> cm.exception
     TypeError('bad type!')
-    >>> cm.exc_type
-    TypeError
+    >>> cm.exception_type
+    <class 'TypeError'>
     >>> cm.traceback
-    <traceback @ 0x3323ef0>
+    <traceback object at ...>
 
     Lowercase name because that it's a class is an implementation detail.
-
     """
 
     def __init__(self, *exc_cls: type):
-        self.exc_cls = exc_cls
+        self.exception_classes: Tuple[type] = exc_cls
+        self.exception_type: Optional[type] = None
+        self.exception: Optional[BaseException] = None
+        self.traceback: Optional[Any] = None
 
     def __enter__(self):
         # For access to the exception later.
@@ -132,16 +141,16 @@ class assert_raises:
 
     def __exit__(
         self,
-        exc_type: Optional[type],
-        exc_value: Optional[BaseException],
+        exception_type: Optional[type],
+        exception: Optional[BaseException],
         traceback: Optional[Any],
     ) -> None:
-        assert exc_type, "No exception raised."
-        assert exc_type in self.exc_cls, "{} not in {}".format(
-            exc_type.__name__, [e.__name__ for e in self.exc_cls]
+        assert exception_type, "No exception raised."
+        assert exception_type in self.exception_classes, (
+            f"{exception_type.__name__} not in {[e.__name__ for e in self.exception_classes]}"
         )
-        self.exc_type = exc_type
-        self.exception = exc_value
+        self.exception_type = exception_type
+        self.exception = exception
         self.traceback = traceback
 
         # Swallow expected exceptions.

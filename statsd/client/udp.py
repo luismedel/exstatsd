@@ -3,7 +3,7 @@ from typing import Optional
 
 from statsd.defaults import Config
 
-from .base import StatsClientBase, PipelineBase
+from .base import PipelineBase, StatsClientBase
 
 
 class Pipeline(PipelineBase):

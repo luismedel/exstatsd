@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Any, Optional, Union
 
-
 NOTSET = object()
 
 

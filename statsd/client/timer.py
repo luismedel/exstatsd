@@ -1,7 +1,7 @@
-from typing import TYPE_CHECKING, Any, Callable, Optional
 import functools
 from inspect import iscoroutinefunction
 from time import perf_counter as time_now
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 
 def safe_wraps(wrapper: Callable, *args: Any, **kwargs: Any) -> Callable:

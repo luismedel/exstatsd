@@ -1,5 +1,5 @@
-from statsd.defaults import Config
 from statsd.client import StatsClient
+from statsd.defaults import Config
 
 statsd = None
 
